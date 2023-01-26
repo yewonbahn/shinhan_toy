@@ -16,7 +16,7 @@
                 $.get("http://127.0.0.1:8000/api/order/"+order_id)
             .then((result)=>{
                 console.log(result)
-                $("#id").text("id:"+result.id);
+                $("#id").text("주문 id:"+result.id);
                 $("#acct_mang_dbrn_code").text("acct_mang_dbrn_code:"+result.acct_mang_dbrn_code);
                 $("#acct_no").text("acct_no:"+result.acct_no);
                 $("#mrgn_base_uv").text("mrgn_base_uv:"+result.mrgn_base_uv);
@@ -36,7 +36,7 @@
                         $("#comments").append(
                             $(`<li class="list-group-item">
                                 ${comment.content}<br><br>
-                                (${comment.tstamp})</li>`)
+                                (${comment.tstamp})</li> <button class="list-group-item">삭제</button>`)
                         )
                     }
                    
@@ -54,11 +54,16 @@
                     order:order_id,
                     content:$("#content").val(),
                 },
+                beforeSend: function (xhr) {
+          
+          xhr.setRequestHeader("Authorization","JWT " + $("#token").val());
+        },
                 success:(result)=>{
                     alert("댓글이 입력되었습니다.")
                 },
+                
                 error:(result)=>{
-
+                    alert("토큰이 필요합니다.")
                   
                 }
             })
@@ -89,6 +94,11 @@
         </ul>
         <hr>
         <div class="add-comment">
+
+            <div class="form-group mb-3">
+                <label for="token">토큰</label>
+                <input type="text" class="form-control" id="token" name="token" />
+              </div>
             <textarea
               id="content"
               rows="2"

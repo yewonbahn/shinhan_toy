@@ -8,7 +8,7 @@ from .paginations import OrderLargePagination
 from .models import Order,Comment
 from .serializers import (
     OrderSerializer,
-    CommentSerializer,)
+    CommentSerializer,CommentCreateSerializer)
 
 class OrderListView(
     mixins.ListModelMixin,
@@ -64,3 +64,13 @@ class CommentListView(
 
     def get(self, request, *args, **kwargs):
         return self.list(request, args, kwargs)
+
+class CommentCreateView(
+    mixins.CreateModelMixin,
+    generics.GenericAPIView
+):
+    serializer_class = CommentCreateSerializer
+    def get_queryset(self):
+        return Comment.objects.all().order_by('id')
+    def post(self,request,*args,**kwargs):
+        return self.create(request,args,kwargs)

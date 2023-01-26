@@ -13,11 +13,11 @@
             .then((result)=>{
                     $("#comments").html("")
                     for(let i=0;i<result.results.length;i++){
-                        const order = result.results[i];
-                        console.log(order)
+                        order = result.results[i];
+                        const url = "file:///C:/Users/user/shinhan_toy/order_detail.html?order_id="+order.id;
                         $("#comments").append(
-                            $(`<button class="list-group-item list-group-item-action  id="${order.id}" 
-                            href="/product/write/" >
+                            $(`<button class="list-group-item list-group-item-action" type="button"
+                            onClick="window.open('${url}')">
                                 주문 번호: ${order.ord_no}<br>
                                 주문 일자: ${order.ord_ymd}</button>`)
                         )
@@ -29,7 +29,7 @@
 </head>
   <body>
     <div class="main-title">
-        <h1>주문리스트 페이지</h1>
+        <h1>주문 리스트</h1>
         <ul>
         
     </div>

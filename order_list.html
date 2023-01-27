@@ -12,10 +12,10 @@
 
             const search = new URLSearchParams(location.search);
             let page = search.get('page');
-    
             if(page==null){
               page=1
             }
+
             $.get("http://127.0.0.1:8000/api/order?page="+page)
             .then((result)=>{
                     console.log(result.count)
@@ -30,7 +30,7 @@
                     $("#comments").html("")
                     for(let i=0;i<result.results.length;i++){
                         order = result.results[i];
-                        const url = "file:///C:/Users/user/shinhan_toy/order_detail.html?order_id="+order.id;
+                        const url = "order_detail.html?order_id="+order.id;
                         $("#comments").append(
                             $(`<button class="list-group-item list-group-item-action" type="button"
                             onClick="window.open('${url}')"

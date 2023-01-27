@@ -21,16 +21,7 @@
             .then((result)=>{
 
                 const total_pages= Math.ceil(result.count/10)
-                    let start = 1
-            
-                    if (page>3){
-                        start = Number(page)-2
-                      }
-                    if (page>total_pages-3){
-                        start = total_pages-4
-                      }
-
-
+      
                 console.log(result)
                 $("#id").text("주문 id:"+result.id);
                 $("#acct_mang_dbrn_code").text("acct_mang_dbrn_code:"+result.acct_mang_dbrn_code);
@@ -40,25 +31,7 @@
                 $("#ord_uv").text("ord_uv:"+result.ord_uv);
                 $("#ord_ymd").text("주문 일자:"+result.ord_ymd);
                 $("#sell_buy_tp_code").text("sell_buy_tp_code:"+result.sell_buy_tp_code);
-                $("#stbd_code").text("stbd_code:"+result.stbd_code);
-
-
-
-                for(let i=start;i<start+5;i++){
-                    if (i==page){
-                      $("#pages").append(
-                            $(`<li class="page-item active"><a class="page-link" onclick="go_page(${i})">
-                              ${i}
-                              </a></li>`)
-                        )
-                        continue;
-                    }
-                    $("#pages").append(
-                            $(`<li class="page-item"><a class="page-link" onclick="go_page(${i})">
-                              ${i}
-                              </a></li>`)
-                        )
-                   }
+                $("#stbd_code").text("stbd_code:"+result.stbd_code)
 
 
 
@@ -66,6 +39,19 @@
 
             $.get("http://127.0.0.1:8000/api/order/"+order_id+"/comment?page="+page)
                 .then((result)=>{
+
+
+                    const total_pages= Math.ceil(result.count/10)
+                    let start = 1
+                    let ori = 5
+                    if (total_pages<5){
+                        ori = total_pages
+                    }
+                    console.log("ori",ori)
+                    if (page>3){
+                        start = Number(page)-2
+                      }
+
                     $("#comments").html("")
                     for(let i=0;i<result.results.length;i++){
                         const comment = result.results[i];
@@ -81,6 +67,23 @@
                                 </li> `)
                         )
                     }
+
+                    for(let i=start;i<start+ori;i++){
+                        console.log(i)
+                    if (i==page){
+                      $("#pages").append(
+                            $(`<li class="page-item active"><a class="page-link" onclick="go_page(${i})">
+                              ${i}
+                              </a></li>`)
+                        )
+                        continue;
+                    }
+                    $("#pages").append(
+                            $(`<li class="page-item"><a class="page-link" onclick="go_page(${i})">
+                              ${i}
+                              </a></li>`)
+                        )
+                   }
                    
                 })
             }

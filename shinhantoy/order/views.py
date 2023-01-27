@@ -18,11 +18,15 @@ class OrderListView(
     serializer_class = OrderSerializer
     pagination_class = OrderLargePagination
     def get_queryset(self):
-        orders = Order.objects.all().prefetch_related("comment_set")
-        id = self.request.query_params.get('id')
-        if id:
-            orders = orders.filter(name__contains=id)
-        return orders.order_by('id')
+        order_no = self.request.query_params.get('order_no')
+        if order_no:
+            orders = Order.objects.all().filter(ord_no__contains=order_no)
+            return orders
+        # orders = Order.objects.all().prefetch_related("comment_set")
+        # id = self.request.query_params.get('id')
+        # if id:
+        #     orders = orders.filter(name__contains=id)
+        return Order.objects.all().order_by('id')
         
     def get(self,request,*args,**kwargs):
         return self.list(request,args,kwargs)

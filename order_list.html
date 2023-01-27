@@ -24,6 +24,35 @@
                     }
                    
                 })})
+      function search_order(){
+        const order_no = $("#search_order").val()
+        $.ajax({
+                type:"GET",
+                url:'http://127.0.0.1:8000/api/order',
+                data: { order_no :order_no},
+                success:(result)=>{
+                  $("#comments").html("")
+                    for(let i=0;i<result.results.length;i++){
+                        order = result.results[i];
+                        const url = "file:///C:/Users/user/shinhan_toy/order_detail.html?order_id="+order.id;
+                        $("#comments").append(
+                            $(`<button class="list-group-item list-group-item-action" type="button"
+                            onClick="window.open('${url}')">
+                                주문 번호: ${order.ord_no}<br>
+                                주문 일자: ${order.ord_ymd}</button>`)
+                        )
+                    }
+                },
+          
+                // error:(result)=>{
+                //     alert("작성한 사용자가 아닙니다.")
+                  
+                // }
+            })
+
+
+
+      }
         
     </script>
 </head>
@@ -34,8 +63,11 @@
         
     </div>
     <hr>
-    <hr>
     <div class="main-content">
+      <div class="input-group mb-3">
+        <input type="text" class="form-control"id="search_order"  placeholder="주문번호로 검색" aria-label="Recipient's username" aria-describedby="button-addon2">
+        <button class="btn btn-outline-secondary" type="button"onclick="search_order()">검색</button>
+      </div>
         <ul class="list-group">
         
             <li class="list-group" id="comments">

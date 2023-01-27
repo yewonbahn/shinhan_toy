@@ -1,10 +1,31 @@
-## Shinhan TOY
+# shinhan-back-toy
 
-- 비밀번호 변경 기능
-    - change_password.html
-    - 현재 비번, 변경 비번, 변경 비번확인, 3개입력
-    - 현재 비번이 일치하면 비번 변경후 200 전달
-    - 변경된 비번으로 로그인되는지 확인
+shinhan pda backend toy project repository
 
 
-- 상세페이지 추가
+<br>
+
+## How to run server
+
+$python manage.py runserver
+
+
+<br>
+
+## Features
+
+- Users can signup, login, logout
+- Users can see the order list in page
+  - Inform users order number, order date
+- Users can use order detail page as community
+  - Users can post comments on specific order
+  - Users can delete comments (only own comments)
+  - Inform users order details such as account number, etc.
+
+<br>
+
+- all the pages are just for the api test.
+
+<br>
+
+## References

@@ -15,17 +15,15 @@ class OrderListView(
     mixins.CreateModelMixin,
     generics.GenericAPIView
 ):
-
     serializer_class = OrderSerializer
     pagination_class = OrderLargePagination
     def get_queryset(self):
         orders = Order.objects.all().prefetch_related("comment_set")
-        print(orders)
-        print("0----")
         id = self.request.query_params.get('id')
         if id:
             orders = orders.filter(name__contains=id)
         return orders.order_by('id')
+        
     def get(self,request,*args,**kwargs):
         return self.list(request,args,kwargs)
 

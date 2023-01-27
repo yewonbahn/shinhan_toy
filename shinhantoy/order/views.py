@@ -76,20 +76,22 @@ class CommentUserView(
 
 
 
-class UserCommentDeleteView(
+class CommentDeleteView(
     mixins.DestroyModelMixin,
     mixins.CreateModelMixin,
     generics.GenericAPIView
 ):
-
-    serializer_class = CommentDeleteSerializer
+    # permission_classes = [IsAuthenticated]
+    # serializer_class = CommentDeleteSerializer
     def get_queryset(self):
-        order_id = self.kwargs.get('pk')
+        comment_id = self.kwargs.get('pk')
 				# 쿼리개선
-        print(order_id)
-        if order_id:
-            return Comment.objects.filter(order_id=order_id) \
-                    .select_related('member','order') \
-                        .order_by('-id') 
+        print(comment_id)
+        if comment_id:
+            return Comment.objects.filter(id=comment_id)
+        return Comment.objects.all().order_by('id')
     def delete(self,request,*args,**kwargs):
+        print("아이디",request.user)
+        if not Comment.objects.filter(member__pk=request.user.id).exists():
+            return Response(status=status.HTTP_400_BAD_REQUEST)        
         return self.destroy(request,args,kwargs)

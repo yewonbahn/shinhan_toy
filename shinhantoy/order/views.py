@@ -34,6 +34,7 @@ class OrderDetailView(
     mixins.UpdateModelMixin,
     generics.GenericAPIView,
 ):
+
     serializer_class=OrderSerializer
 
     def get_queryset(self):
@@ -47,6 +48,7 @@ class CommentListView(
     mixins.ListModelMixin,
     generics.GenericAPIView
 ):
+
     serializer_class = CommentSerializer
 
     def get_queryset(self):
@@ -68,6 +70,7 @@ class CommentUserView(
     mixins.CreateModelMixin,
     generics.GenericAPIView
 ):
+    permission_classes = [IsAuthenticated]
     serializer_class = CommentCreateSerializer
     def get_queryset(self):
         return Comment.objects.all().order_by('id')
@@ -81,17 +84,10 @@ class CommentDeleteView(
     mixins.CreateModelMixin,
     generics.GenericAPIView
 ):
-    # permission_classes = [IsAuthenticated]
-    # serializer_class = CommentDeleteSerializer
+    permission_classes = [IsAuthenticated]
+
     def get_queryset(self):
-        comment_id = self.kwargs.get('pk')
-				# 쿼리개선
-        print(comment_id)
-        if comment_id:
-            return Comment.objects.filter(id=comment_id)
-        return Comment.objects.all().order_by('id')
-    def delete(self,request,*args,**kwargs):
-        print("아이디",request.user)
-        if not Comment.objects.filter(member__pk=request.user.id).exists():
-            return Response(status=status.HTTP_400_BAD_REQUEST)        
+        return Comment.objects.filter(member__pk=self.request.user.id).order_by('id')
+
+    def delete(self,request,*args,**kwargs):       
         return self.destroy(request,args,kwargs)

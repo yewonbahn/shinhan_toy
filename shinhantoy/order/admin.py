@@ -6,5 +6,5 @@ class MemberAdmin(admin.ModelAdmin):
     pass
 
 @admin.register(Comment)
-class ProductAdmin(admin.ModelAdmin):
+class CommentAdmin(admin.ModelAdmin):
     pass

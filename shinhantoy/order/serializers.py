@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Order,Comment
+from .models import Order,Comment,Like
 
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
@@ -11,6 +11,11 @@ class CommentSerializer(serializers.ModelSerializer):
     tstamp = serializers.DateTimeField(
         read_only=True,format='%Y-%m-%d %H:%M:%S'
     )
+
+    like_count = serializers.SerializerMethodField();
+
+    def get_like_count(self,obj):
+        return obj.like_set.all().count();
 
     def get_order_id(self,obj):
         return obj.order.id
@@ -35,17 +40,19 @@ class CommentCreateSerializer(serializers.ModelSerializer):
         fields = "__all__"
         extra_kwargs={'member':{'required':False}}
 
-class CommentDeleteSerializer(serializers.ModelSerializer):
-    def validate(self, attrs):
-        request = self.context['request']
-        if request.user.is_authenticated:
-            attrs['member']=request.user
-        else:
-            raise serializers.ValidationError("member is required")
 
-        print(request.user)
-        return attrs
+
+class LikeCreateSerializer(serializers.ModelSerializer):
+    member = serializers.HiddenField(
+        default = serializers.CurrentUserDefault(),
+        required = False
+    )
+    def validate_member(self, value):
+        if not value.is_authenticated :
+            raise serializers.ValidationError("member is required")
+        return value
+
     class Meta:
-        model = Comment
+        model = Like
         fields = "__all__"
-        extra_kwargs={'member':{'required':False}}
+        # extra_kwargs={'member':{'required':False}}

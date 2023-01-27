@@ -5,10 +5,12 @@ from rest_framework import mixins, generics,status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .paginations import OrderLargePagination
-from .models import Order,Comment
+from .models import Order,Comment,Like
 from .serializers import (
     OrderSerializer,
-    CommentSerializer,CommentCreateSerializer,CommentDeleteSerializer)
+    CommentSerializer,
+    CommentCreateSerializer,
+    LikeCreateSerializer)
 
 class OrderListView(
     mixins.ListModelMixin,
@@ -16,7 +18,7 @@ class OrderListView(
     generics.GenericAPIView
 ):
     serializer_class = OrderSerializer
-    pagination_class = OrderLargePagination
+    # pagination_class = OrderLargePagination
     def get_queryset(self):
         order_no = self.request.query_params.get('order_no')
         if order_no:
@@ -93,3 +95,19 @@ class CommentDeleteView(
 
     def delete(self,request,*args,**kwargs):       
         return self.destroy(request,args,kwargs)
+
+
+class LikeCreateView(
+    mixins.CreateModelMixin,
+    generics.GenericAPIView
+):
+    serializer_class = LikeCreateSerializer
+    def get_queryset(self):
+        return Like.objects.all().order_by('id')
+
+    def post(self,request,*args,**kwargs):
+        comment_id = request.data.get('comment')
+        if Like.objects.filter(member=request.user,comment_id=comment_id).exists():
+            Like.objects.filter(member=request.user,comment_id=comment_id).delete()
+            return Response()
+        return self.create(request,args,kwargs)

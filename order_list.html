@@ -12,6 +12,7 @@
 
             const search = new URLSearchParams(location.search);
             let page = search.get('page');
+    
             if(page==null){
               page=1
             }
@@ -19,12 +20,10 @@
             .then((result)=>{
                     console.log(result.count)
                     const total_pages= Math.ceil(result.count/10)
-
                     let start = 1
                     if (page>3){
                         start = Number(page)-2
                       }
-
                     if (page>total_pages-3){
                         start = total_pages-4
                       }
@@ -76,11 +75,6 @@
                         )
                     }
                 },
-          
-                // error:(result)=>{
-                //     alert("작성한 사용자가 아닙니다.")
-                  
-                // }
             })
 
 

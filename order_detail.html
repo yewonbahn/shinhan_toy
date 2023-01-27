@@ -33,10 +33,11 @@
                     $("#comments").html("")
                     for(let i=0;i<result.results.length;i++){
                         const comment = result.results[i];
+                        console.log(comment)
                         $("#comments").append(
                             $(`<li class="list-group-item">
                                 ${comment.content}<br><br>
-                                (${comment.tstamp})</li> <button class="list-group-item">삭제</button>`)
+                                ${comment.member_username}(${comment.tstamp})</li> <button class="list-group-item " onclick="delete_comment(${comment.id})">삭제</button>`)
                         )
                     }
                    
@@ -64,6 +65,30 @@
                 
                 error:(result)=>{
                     alert("토큰이 필요합니다.")
+                  
+                }
+            })
+        }
+
+
+        function delete_comment(id){
+            const search = new URLSearchParams(location.search);
+            const order_id = search.get('order_id');
+        
+            console.log("num",id)
+            $.ajax({
+                type:"DELETE",
+                url:'http://127.0.0.1:8000/api/order/'+order_id+"/comment/"+id,
+                beforeSend: function (xhr) {
+          
+          xhr.setRequestHeader("Authorization","JWT " + $("#token").val());
+        },
+                success:(result)=>{
+                    alert("댓글이 삭제되었습니다.")
+                },
+                
+                error:(result)=>{
+                    alert("작성한 사용자가 아닙니다.")
                   
                 }
             })

@@ -104,5 +104,5 @@ class LikeCreateView(
         comment_id = request.data.get('comment')
         if Like.objects.filter(member=request.user,comment_id=comment_id).exists():
             Like.objects.filter(member=request.user,comment_id=comment_id).delete()
-            return Response()
+            return Response("좋아요를 취소합니다.")
         return self.create(request,args,kwargs)
